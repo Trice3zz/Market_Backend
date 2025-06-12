@@ -1,8 +1,7 @@
 import express from "express";
-import { getProductById, getReviewsByProductId } 
+import { getProduct, getProductById, getReviewsByProductId } 
 
 const router = express.Router();
-
 
 router.route("/").get(async (req, res) => {
     const products = await getProducts();
@@ -17,8 +16,6 @@ router.route("/:id").get(async (req, res) => {
     }
     res.send(product);
 });
-
-
 
 router.get("/products/:id/reviews", async (req, res) => {
     const productId = req.params.id;
