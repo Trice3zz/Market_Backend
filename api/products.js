@@ -1,30 +1,45 @@
 import express from "express";
-import { getProduct, getProductById, getReviewsByProductId } 
+import { getProducts, getProduct } from "../db/queries/products.js";
 
 const router = express.Router();
 
-router.route("/").get(async (req, res) => {
-    const products = await getProducts();
-    res.send(products);
+router.get("/", async (req, res) => {
+  const products = await getProducts()
+  res.send(products)
 });
 
 router.route("/:id").get(async (req, res) => {
-    const id = req.params.id
-    const product = await getProduct(id)
-    if(!product){
-        return res.status(404).send({ error: "ID does not exist"})
-    }
-    res.send(product);
+  const id = req.params.id
+  if (!Number.isInteger(id) && id != 0) 
+    return res.status(400).send({ error: "Invalid ID" })
+  const product = await getProduct(id)
+  if (!product){
+    return res.status(404).send({ error: "Product not found" })
+  }
+  res.send(product)
 });
 
-router.get("/products/:id/reviews", async (req, res) => {
-    const productId = req.params.id;
-    const product = await getProductById(productId);
-    if (!product) {
-        return res.status(404).send({ error: "Product not found" });
-    }
-    const reviews = await getReviewsByProductId(productId);
-    res.send(reviews);
+router.route("/:id/reviews").get(async (req, res) => {
+  const id = req.params.id
+  if (!Number.isInteger(id) && id !=0) 
+    return res.status(400).send({ error: "Invalid ID" })
+  const product = await getProduct(id)
+  if (!product){
+    return res.status(404).send({ error: "Product not found" })
+  }
+    const reviews = await getReviewsByProductId(id)
+  res.send(reviews)
+});
+
+router.route("/:id/reviews").post(async (req, res) => {
+  const id = req.params.id
+  if (!Number.isInteger(id)) return res.status(400).send({ error: "Invalid ID" })
+  const product = await getProduct(id)
+  if (!product) return res.status(404).send({ error: "Product not found" })
+  const { rating, comment } = req.body
+  if (!rating) return res.status(400).send({ error: "Missing rating" })
+  const review = await createReview({ rating, comment, product_id: id })
+  res.status(201).send(review)
 });
 
 export default router;
