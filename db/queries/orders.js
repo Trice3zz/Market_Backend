@@ -1,6 +1,6 @@
 import client from "../client.js";
 
-export async function createOrder({ datee, note, user_id}){
+export async function createOrder({ date, note, user_id}){
     const sql = `
     INSERT INTO orders (date, note, user_id)
     VALUES ($1, $2, $3)
