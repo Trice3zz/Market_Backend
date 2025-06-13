@@ -1,6 +1,8 @@
 import express from "express";
 import { createOrder, getOrdersByUser, getOrderById} from "../db/queries/orders.js";
 
+//WILL NEED AUTHORIZATION ADDED TO IT
+
 
 const router = express.Router();
 
