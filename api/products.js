@@ -1,6 +1,8 @@
 import express from "express";
 import { getProducts, getProduct } from "../db/queries/products.js";
 
+//WILL NEED AUTHORIZATION ADDED TO IT
+
 const router = express.Router();
 
 router.route("/").get(async (req, res) => {
