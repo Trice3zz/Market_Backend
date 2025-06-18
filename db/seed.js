@@ -32,11 +32,11 @@ async function seed() {
     await createUser("Zargothrax", "AngusSucks")
     await createUser("BenDover", "08242009")
 
-    await createOrder("2015-03-17", "1 Classic Rubber Duck, 1 Dapper Duck, 1 Sir Ducklington, 1 Bat Duck", 1)
+    await createOrder("2015-03-17", "1 Dapper Duck, 1 Sir Ducklington, 1 Bat Duck", 1)
     await createOrder("2017-12-25", "2 Frankenducks, 1 Unicorn Duck", 2)
-    await createOrder("2024-06-13", "1,000 Rubber Duck?", 3)
+    await createOrder("2024-06-13", "1,000 Rubber Ducks?", 3)
     await createOrder("2015-05-06", "1 Cowboy Duck, 1 Unicorn Duck, 1 Rainbow Duck", 1)
-    await createOrder("2020-07-02", "3 Rubber Ducks, 1 Real Duck", 4)
+    await createOrder("2020-07-02", "3 Classic Rubber Ducks, 1 Real Duck", 4)
     
 }
 
