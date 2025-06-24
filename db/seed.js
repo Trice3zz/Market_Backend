@@ -18,7 +18,7 @@ async function seed() {
     await createProduct("Real Duck", "Literally just a real duck. How'd this get in here?", "https://media.istockphoto.com/id/464988959/photo/mallard-duck-on-white-background.jpg?s=612x612&w=0&k=20&c=S1jcDuyXuoCVUaTobTrZ5f6SlscukkyheqKDHAeflW8=", 0.00)
     await createProduct("Cowboy Duck", "YEEEEE HAAAAW!", "https://cdn.shoplightspeed.com/shops/605879/files/29450535/1024x1024x2/schylling-associates-cowboy-rubber-duck.jpg", 6.99)
     await createProduct("Unicorn Duck", "The most magical of all the ducks", "https://i5.walmartimages.com/asr/5b3d3e5f-933d-45d2-8f86-d25d340457ed.31af46bdc97e8348696137d351018994.jpeg", 7.99)
-    await createProduct("Rubber Duck?", "I don't like this one", "https://static.wikia.nocookie.net/dark-deception-game/images/f/fa/Dread_Ducky.png/revision/latest?cb=20211023202719", 6.66)
+    await createProduct("Rubber Duck?", "I don't like this one", "https://static.wikia.nocookie.net/dark-deception-game/images/7/7b/Dreadduckyfullmodel.PNG/revision/latest?cb=20190625050228", 6.66)
     await createProduct("Rainbow Duck", "So colorful that it hurts my eyes", "https://api.totallypromotional.com/Data/Media/e30f9893-bcb0-458d-b985-6ab385e8dd59LL031-Rainbow-Duck.jpg", 1.99)
 
     await createReview(5, "Great quality! This will make an excellent addition to my collection", 2)
