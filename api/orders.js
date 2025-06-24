@@ -30,3 +30,5 @@ router.route("/").post(async (req, res) => {
     }
     res.send(order)
   })
+
+  export default router;

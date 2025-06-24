@@ -11,8 +11,8 @@ router.route("/").get(async (req, res) => {
 });
 
 router.route("/:id").get(async (req, res) => {
-  const id = req.params.id
-  if (!Number.isInteger(id) && id != 0) 
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id < 0) 
     return res.status(400).send({ error: "Invalid ID" })
   const product = await getProduct(id)
   if (!product){
