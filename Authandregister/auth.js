@@ -1,4 +1,4 @@
-import { verifyToken } from '..authMiddleware.js';
+import  verifyToken from '..authMiddleware.js';
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
