@@ -7,7 +7,7 @@ import pool from '../db.js';
 const router = express.Router();
 const JWT_SECRET = 'PinkRain0624'; 
 
-
+// Register
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
 
@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-
+// Login
 router.post('/login', async (req, res) => {
   const { username, password, remember } = req.body;
 
@@ -59,7 +59,9 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Login failed' });
   }
+});
 
+// Get Current User
 router.get('/me', verifyToken, async (req, res) => {
   try {
     const { id } = req.user;
@@ -77,14 +79,11 @@ router.get('/me', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to get user' });
   }
 });
+
+// Logout
 router.post('/logout', (req, res) => {
   res.clearCookie('username');
   res.json({ message: 'Logged out successfully' });
 });
 
-
-});
-
 export default router;
-
-
