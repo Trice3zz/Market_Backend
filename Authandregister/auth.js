@@ -7,6 +7,7 @@ import pool from '../db/db.js';
 const router = express.Router();
 const JWT_SECRET = 'PinkRain0624'; 
 
+
 // Register
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
