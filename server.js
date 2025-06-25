@@ -1,7 +1,7 @@
 import app from './app.js';
 import client from './db/client.js';
-import authRoutes from './Authandregister/auth.js';
-app.use('/auth', authRoutes);
+import authRouter from './Authandregister/auth.js';
+app.use('/auth', authRouter);
 
 
 const PORT = process.env.PORT ?? 3000;
