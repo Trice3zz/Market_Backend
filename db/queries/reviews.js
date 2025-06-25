@@ -6,3 +6,10 @@ export async function createReview(rating, comment, product_id) {
 
     return sql.rows[0]
 }
+
+export async function getReviewsByProductId(productId) {
+    const sql = await client.query(`SELECT * FROM reviews WHERE product_id = $1`,
+      [productId])
+  
+    return sql.rows; 
+  }
