@@ -1,6 +1,6 @@
 import app from './app.js';
 import client from './db/client.js';
-import authRoutes from './routes/authRoutes.js';
+import authRoutes from './Authandregister/auth.js';
 app.use('/auth', authRoutes);
 
 
