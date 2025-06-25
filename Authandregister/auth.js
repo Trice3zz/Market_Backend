@@ -1,8 +1,8 @@
-import  verifyToken from './Middleware/authMiddleware.js';
+import { verifyToken } from '../Middleware/authMiddleware.js';
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import pool from '../db.js'; 
+import pool from '../db/db.js'; 
 
 const router = express.Router();
 const JWT_SECRET = 'PinkRain0624'; 
