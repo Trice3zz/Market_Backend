@@ -2,7 +2,7 @@ import { verifyToken } from '../Middleware/authMiddleware.js';
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import pool from '../db/db.js'; 
+import client from '../db/client.js'; 
 
 const router = express.Router();
 const JWT_SECRET = 'PinkRain0624'; 
@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
 
   try {
     const hashed = await bcrypt.hash(password, 10);
-    const result = await pool.query(
+    const result = await client.query(
       'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username',
       [username, hashed]
     );
@@ -32,9 +32,10 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+  console.log("Login attempt:", username);
 
   try {
-    const userResult = await pool.query(
+    const userResult = await client.query(
       'SELECT * FROM users WHERE username = $1',
       [username]
     );
@@ -43,11 +44,16 @@ router.post('/login', async (req, res) => {
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!valid) {
+      console.log("Invalid password");
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
       expiresIn: '1h'
     });
+
+    console.log("Login successful for user:", username);
 
     res.json({ message: 'Login successful', token });
   } catch (err) {
@@ -63,7 +69,7 @@ router.post('/orders', verifyToken, async (req, res) => {
     return res.status(400).json({ error: 'Missing date or productId' });
   }
   try {
-    const result = await pool.query(
+    const result = await client.query(
       'INSERT INTO orders (user_id, product_id, date) VALUES ($1, $2, $3) RETURNING *',
       [userId, productId, date]
     )
@@ -78,7 +84,8 @@ router.post('/orders', verifyToken, async (req, res) => {
 router.get('/me', verifyToken, async (req, res) => {
   try {
     const { id } = req.user;
-    const result = await pool.query(
+    console.log("User ID from token:", id);
+    const result = await client.query(
       'SELECT id, username FROM users WHERE id = $1',
       [id]
     );
@@ -87,11 +94,11 @@ router.get('/me', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     const user = result.rows[0]
-    const ordersResult = await pool.query(
+    const ordersResult = await client.query(
       'SELECT * FROM orders WHERE user_id = $1',
       [id]
     )
-    const reviewsResult = await pool.query(
+    const reviewsResult = await client.query(
       `SELECT r.id, r.content, r.rating, r.order_id 
        FROM reviews r 
        JOIN orders o ON r.order_id = o.id 
