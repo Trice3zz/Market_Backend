@@ -1,8 +1,8 @@
 import client from "../client.js";
 
-export async function createReview(rating, comment, product_id) {
-    const sql = await client.query(`INSERT INTO reviews (rating, comment, product_id) VALUES ($1, $2, $3)
-    RETURNING *;`, [rating, comment, product_id])
+export async function createReview(rating, comment, userId, product_id) {
+    const sql = await client.query(`INSERT INTO reviews (rating, comment, user_id, product_id) VALUES ($1, $2, $3, $4)
+    RETURNING *;`, [rating, comment, userId, product_id])
 
     return sql.rows[0]
 }

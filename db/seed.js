@@ -22,10 +22,10 @@ async function seed() {
     await createProduct("Rainbow Duck", "So colorful that it hurts my eyes", "https://api.totallypromotional.com/Data/Media/e30f9893-bcb0-458d-b985-6ab385e8dd59LL031-Rainbow-Duck.jpg", 1.99)
 
     await createReview(5, "Great quality! This will make an excellent addition to my collection", 2)
-    await createReview(1, "Terrible product, it's constantly falling apart", 1)
-    await createReview(5, "I will make great use of these", 9)
-    await createReview(3, "It's Okay", 7)
-    await createReview(2, "It's not even made of rubber", 6)
+    await createReview(1, "Terrible product, it's constantly falling apart", 1, 2)
+    await createReview(5, "I will make great use of these", 9, 1)
+    await createReview(3, "It's Okay", 7, 4)
+    await createReview(2, "It's not even made of rubber", 6, 7)
 
     await createUser("I_Love_Ducks", "ducks123")
     await createUser("Jonny333", "cj%#heQ#JFlfb@")
