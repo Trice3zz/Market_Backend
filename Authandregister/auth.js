@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
 
 // Login
 router.post('/login', async (req, res) => {
-  const { username, password, remember } = req.body;
+  const { username, password } = req.body;
 
   try {
     const userResult = await pool.query(
@@ -49,16 +49,28 @@ router.post('/login', async (req, res) => {
       expiresIn: '1h'
     });
 
-    if (remember) {
-      res.cookie('username', user.username, {
-        maxAge: 30 * 24 * 60 * 60 * 1000, 
-        httpOnly: true
-      });
-    }
-
     res.json({ message: 'Login successful', token });
   } catch (err) {
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+//Orders
+router.post('/orders', verifyToken, async (req, res) => {
+  const userId = req.user.id;
+  const { date, productId } = req.body;
+  if (!date || !productId) {
+    return res.status(400).json({ error: 'Missing date or productId' });
+  }
+  try {
+    const result = await pool.query(
+      'INSERT INTO orders (user_id, product_id, date) VALUES ($1, $2, $3) RETURNING *',
+      [userId, productId, date]
+    )
+    res.status(201).json(result.rows[0])
+  } catch (error) {
+    console.error('Error creating order:', error)
+    res.status(500).json({ error: 'Failed to create order' })
   }
 });
 
@@ -74,10 +86,26 @@ router.get('/me', verifyToken, async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    res.json({ user: result.rows[0] });
+    const user = result.rows[0]
+    const ordersResult = await pool.query(
+      'SELECT * FROM orders WHERE user_id = $1',
+      [id]
+    )
+    const reviewsResult = await pool.query(
+      `SELECT r.id, r.content, r.rating, r.order_id 
+       FROM reviews r 
+       JOIN orders o ON r.order_id = o.id 
+       WHERE o.user_id = $1`,
+      [id]
+    )
+    res.json({
+      user,
+      orders: ordersResult.rows,   
+      reviews: reviewsResult.rows   
+    })
   } catch (err) {
-    res.status(500).json({ error: 'Failed to get user' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to get user data' });
   }
 });
 
@@ -86,5 +114,6 @@ router.post('/logout', (req, res) => {
   res.clearCookie('username');
   res.json({ message: 'Logged out successfully' });
 });
+
 
 export default router;
