@@ -98,17 +98,17 @@ router.get('/me', verifyToken, async (req, res) => {
       'SELECT * FROM orders WHERE user_id = $1',
       [id]
     )
-    const reviewsResult = await client.query(
-      `SELECT r.id, r.content, r.rating, r.order_id 
-       FROM reviews r 
-       JOIN orders o ON r.order_id = o.id 
-       WHERE o.user_id = $1`,
-      [id]
-    )
+    // const reviewsResult = await client.query(
+    //   `SELECT r.id, r.content, r.rating, r.order_id 
+    //    FROM reviews r 
+    //    JOIN orders o ON r.order_id = o.id 
+    //    WHERE o.user_id = $1`,
+    //   [id]
+    // )
     res.json({
       user,
       orders: ordersResult.rows,   
-      reviews: reviewsResult.rows   
+      // reviews: reviewsResult.rows   
     })
   } catch (err) {
     console.error(err);
