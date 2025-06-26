@@ -3,6 +3,7 @@ import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import client from '../db/client.js'; 
+import { getReviewsByUserId } from '../db/queries/reviews.js';
 
 const router = express.Router();
 const JWT_SECRET = 'PinkRain0624'; 
@@ -80,35 +81,29 @@ router.post('/orders', verifyToken, async (req, res) => {
 });
 
 // Get Current User
-router.get('/me', verifyToken, async (req, res) => {
+router.route('/me').get(verifyToken, async (req, res) => {
   try {
     const { id } = req.user;
-    console.log("User ID from token:", id);
+
     const result = await client.query(
       'SELECT id, username FROM users WHERE id = $1',
       [id]
     );
-
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const user = result.rows[0]
+
+    const user = result.rows[0];
     const ordersResult = await client.query(
       'SELECT * FROM orders WHERE user_id = $1',
       [id]
-    )
-    // const reviewsResult = await client.query(
-    //   `SELECT r.id, r.content, r.rating, r.order_id 
-    //    FROM reviews r 
-    //    JOIN orders o ON r.order_id = o.id 
-    //    WHERE o.user_id = $1`,
-    //   [id]
-    // )
+    );
+    const reviews = await getReviewsByUserId(id)
     res.json({
       user,
-      orders: ordersResult.rows,   
-      // reviews: reviewsResult.rows   
-    })
+      orders: ordersResult.rows,
+      reviews, 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to get user data' });

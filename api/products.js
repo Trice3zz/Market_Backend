@@ -49,8 +49,9 @@ router.route("/:id/reviews").post(verifyToken, async (req, res) => {
   const product = await getProduct(id)
   if (!product) return res.status(404).send({ error: "Product not found" })
   const { rating, comment } = req.body
+  const user_id = req.user.id
   if (!rating) return res.status(400).send({ error: "Missing rating" })
-  const review = await createReview({ rating, comment, product_id: id})
+  const review = await createReview({ rating, comment, product_id: id, user_id})
   res.status(201).send(review)
 });
 
