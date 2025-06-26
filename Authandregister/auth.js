@@ -63,20 +63,19 @@ router.post('/login', async (req, res) => {
 
 //Orders
 router.post('/orders', verifyToken, async (req, res) => {
+  console.log("/orders route hit")
   const userId = req.user.id;
-  const { date, note } = req.body;
+  const { date, note = "" } = req.body;
+  console.log("Incoming order data:", { userId, date, note });
   if (!date) {
     return res.status(400).json({ error: 'Missing date' })
   }
   try {
-    const result = await client.query(
-      'INSERT INTO orders (user_id, date, note) VALUES ($1, $2, $3) RETURNING *',
-      [userId, date, note]
-    )
-    res.status(201).json(result.rows[0])
+    const result = await createOrder(date, note, userId);
+    res.status(201).json(result);
   } catch (error) {
-    console.error('Error creating order:', error)
-    res.status(500).json({ error: 'Failed to create order' })
+    console.error('Error creating order:', error);
+    res.status(500).json({ error: 'Failed to create order' });
   }
 });
 
