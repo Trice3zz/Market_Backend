@@ -1,6 +1,7 @@
 import express from "express";
 import { getProducts, getProduct } from "../db/queries/products.js";
-import { getReviewsByProductId} from "../db/queries/reviews.js";
+import { getReviewsByProductId, createReview } from "../db/queries/reviews.js";
+import { verifyToken } from "../Middleware/authMiddleware.js";
 
 //WILL NEED AUTHORIZATION ADDED TO IT
 
@@ -40,7 +41,7 @@ try{
 }
 });
 
-router.route("/:id/reviews").post(async (req, res) => {
+router.route("/:id/reviews").post(verifyToken, async (req, res) => {
   const id = parseInt(req.params.id, 10)
   if (isNaN(id) || id < 0){
     return res.status(400).send({ error: "Invalid ID" })
@@ -49,7 +50,7 @@ router.route("/:id/reviews").post(async (req, res) => {
   if (!product) return res.status(404).send({ error: "Product not found" })
   const { rating, comment } = req.body
   if (!rating) return res.status(400).send({ error: "Missing rating" })
-  const review = await createReview({ rating, comment, product_id: id })
+  const review = await createReview({ rating, comment, product_id: id})
   res.status(201).send(review)
 });
 
