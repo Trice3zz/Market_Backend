@@ -64,14 +64,14 @@ router.post('/login', async (req, res) => {
 //Orders
 router.post('/orders', verifyToken, async (req, res) => {
   const userId = req.user.id;
-  const { date, productId } = req.body;
-  if (!date || !productId) {
-    return res.status(400).json({ error: 'Missing date or productId' });
+  const { date, note } = req.body;
+  if (!date) {
+    return res.status(400).json({ error: 'Missing date' })
   }
   try {
     const result = await client.query(
-      'INSERT INTO orders (user_id, product_id, date) VALUES ($1, $2, $3) RETURNING *',
-      [userId, productId, date]
+      'INSERT INTO orders (user_id, date, note) VALUES ($1, $2, $3) RETURNING *',
+      [userId, date, note]
     )
     res.status(201).json(result.rows[0])
   } catch (error) {
