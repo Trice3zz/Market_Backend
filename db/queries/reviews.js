@@ -12,9 +12,11 @@ export async function createReview({ rating, comment, product_id }) {
 
   export async function getReviewsByProductId(product_id) {
     const sql = `
-      SELECT * FROM reviews
-      WHERE product_id = $1;
+    SELECT id, rating, comment
+    FROM reviews
+    WHERE product_id = $1
+    ORDER BY id DESC;
     `;
     const { rows } = await client.query(sql, [product_id]);
-    return rows[0]
+    return rows;
   };
