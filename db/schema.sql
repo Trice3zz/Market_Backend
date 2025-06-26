@@ -27,8 +27,9 @@ CREATE TABLE products(
 
 CREATE TABLE reviews(
     id SERIAL PRIMARY KEY,
-    rating INTEGER NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE
 );
 
